@@ -1,6 +1,7 @@
 package com.harry.controllers;
 
 import com.harry.config.JwtTokenUtil;
+import com.harry.exception.UnAuthorizedUserException;
 import com.harry.model.JwtRequest;
 import com.harry.model.JwtResponse;
 import com.harry.model.UserModel;
@@ -54,9 +55,9 @@ public class JwtAuthenticationController {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         } catch (DisabledException e) {
-            throw new Exception("USER_DISABLED", e);
+            throw new UnAuthorizedUserException("USER_DISABLED", e);
         } catch (BadCredentialsException e) {
-            throw new Exception("INVALID_CREDENTIALS", e);
+            throw new UnAuthorizedUserException("INVALID_CREDENTIALS", e);
         }
     }
 }
