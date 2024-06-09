@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 
 @Service
@@ -24,10 +25,11 @@ public class JwtUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserEntity user = userRepository.findByUserName(username).get();
-        if (user == null) {
+        Optional<UserEntity> userOptional = userRepository.findByUserName(username);
+        if (userOptional.isEmpty()) {
             throw new UsernameNotFoundException("User not found with username: " + username);
         }
+        UserEntity user = userOptional.get();
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
                 new ArrayList<>());
     }
